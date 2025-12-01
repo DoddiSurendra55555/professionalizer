@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --neon-cyan: #00f0ff;
+  --neon-pink: #d946ef;
+  --deep-bg: #050a14;
+}
+
+body {
+  margin: 0;
+  background-color: var(--deep-bg);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  
+  /* The "Tech Grid" Background from the screenshot */
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(20, 30, 60, 0.8) 0%, rgba(5, 10, 20, 1) 100%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #020617; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+
+/* ----------------------------------------------
+   GLASS UI CLASSES (Based on your screenshot)
+----------------------------------------------- */
+
+/* The Blue/Cyan Card (Left Side Style) */
+.glass-card-cyan {
+  background: rgba(8, 14, 28, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+/* The Pink/Purple Card (Right Side Style) */
+.glass-card-pink {
+  background: rgba(20, 10, 28, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  box-shadow: 0 0 20px rgba(217, 70, 239, 0.1), inset 0 0 20px rgba(217, 70, 239, 0.05);
+}
+
+/* Inputs */
+.tech-input {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  transition: all 0.3s ease;
+}
+.tech-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+  outline: none;
+}
+
+/* Neon Text Utilities */
+.text-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+.text-glow-pink {
+  text-shadow: 0 0 10px rgba(217, 70, 239, 0.5);
+}
