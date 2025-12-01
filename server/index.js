@@ -1,52 +1,68 @@
+// DEBUG LOG: Line 1 - Proves the file is actually running
+console.log("🔄 SYSTEM STARTING: Loading modules...");
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Load environment variables
+// Load env vars
 dotenv.config();
 
 const app = express();
-// CRITICAL FIX: Render assigns a random port, usually 10000. We must use it.
-const port = process.env.PORT || 5000;
+// RENDER FIX: Render ALWAYS uses port 10000. We must respect process.env.PORT
+const port = process.env.PORT || 10000;
+
+console.log(`✅ Modules Loaded. Configuring server for Port: ${port}...`);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Initialize Google AI
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-
-// 1. Health Check Route (Render looks for this)
+// 1. Health Check Route (Vital for Render to know we are alive)
 app.get('/', (req, res) => {
-  res.send('Professionalizer Backend is Live! 🚀');
+  console.log("💓 Health check ping received!");
+  res.send('Professionalizer Backend is Active & Running.');
 });
 
-// 2. The Rewrite Logic
+// Initialize AI
+const apiKey = process.env.GOOGLE_API_KEY;
+if (!apiKey) {
+    console.error("❌ CRITICAL ERROR: GOOGLE_API_KEY is missing in environment variables!");
+} else {
+    console.log("🔑 API Key found. Initializing Gemini...");
+}
+const genAI = new GoogleGenerativeAI(apiKey || "dummy_key_to_prevent_crash");
+
 app.post('/api/rewrite', async (req, res) => {
   try {
     const { text, tone } = req.body;
+    console.log(`📩 Request received: ${tone}`);
+    
     if (!text) return res.status(400).json({ error: 'Text is required' });
 
-    console.log(`Processing: ${text.substring(0, 15)}...`);
-
-    // Use the model we confirmed works
+    // Use the confirmed model
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
-    const prompt = `Rewrite to be ${tone}: "${text}"`;
     
+    const prompt = `Rewrite to be ${tone}: "${text}"`;
     const result = await model.generateContent(prompt);
     const response = await result.response;
     
     res.json({ result: response.text() });
+    console.log("✅ Response sent successfully.");
 
   } catch (error) {
-    console.error('Error:', error.message);
+    console.error('❌ AI Error:', error.message);
     res.status(500).json({ error: 'AI Error', details: error.message });
   }
 });
 
-// 3. CRITICAL FIX: Bind to '0.0.0.0' to ensure Render can see the app
-app.listen(port, '0.0.0.0', () => {
-  console.log(`✅ Server running on Port ${port}`);
+// 2. STARTUP COMMAND
+// We use '0.0.0.0' to bind to all network interfaces (Required for Render)
+app.listen(port, '0.0.0.0', (err) => {
+    if (err) {
+        console.error("❌ FAILED TO START SERVER:", err);
+    } else {
+        console.log(`🚀 SERVER IS LIVE on http://0.0.0.0:${port}`);
+    }
 });
