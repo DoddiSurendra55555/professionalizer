@@ -12,7 +12,6 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [tone, setTone] = useState('Professional');
 
-  // Matched tones to the screenshot's right-side list style
   const tones = [
     { id: 'Professional', icon: Briefcase, label: 'Professional', desc: 'Corporate Standard' },
     { id: 'Friendly', icon: MessageCircle, label: 'Friendly', desc: 'Warm & Casual' },
@@ -26,14 +25,15 @@ export default function App() {
     setOutput(""); 
 
     try {
-      const response = await axios.post('http://localhost:5000/api/rewrite', {
+      // ✅ UPDATED: Now pointing to your Live Render Backend
+      const response = await axios.post('https://professionalizer-backend.onrender.com/api/rewrite', {
         text: input,
         tone: tone
       });
       setOutput(response.data.result);
     } catch (error) {
       console.error("Error:", error);
-      setOutput("⚠️ CONNECTION FAILURE: Server unreachable on port 5000.");
+      setOutput("⚠️ CONNECTION FAILURE: The backend is waking up... please try again in 30 seconds.");
     } finally {
       setIsLoading(false);
     }
